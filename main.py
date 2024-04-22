@@ -11,6 +11,9 @@ import random
 from youtubesearchpython import VideosSearch
 import webbrowser
 
+GREEN = '\033[92m'
+WHITE = '\33[0m'
+
 # Find all names of the songs in string
 def find_songs_in_string(string):
     regex = r"\<(.+)\>"
@@ -47,28 +50,28 @@ except:
 # Process
 while (True):
     # Listen user
-    with speech_recognition.Microphone() as mic:
-        robot_ear.adjust_for_ambient_noise(mic)
-        print("Robot: Tôi đang nghe")
-        audio = robot_ear.listen(mic)
+    # with speech_recognition.Microphone() as mic:
+    #     robot_ear.adjust_for_ambient_noise(mic)
+    #     print(f"{GREEN}Robot: Tôi đang nghe")
+    #     audio = robot_ear.listen(mic)
     
-    print("Robot: ...")
+    # print(f"{GREEN}Robot: ...")
 
-    try:
-        you = robot_ear.recognize_google(audio, language="vi-VN")
-        print(f"You: {you}")
-    except:
-        you = ""
-    if (you == ""):
-        continue
+    # try:
+    #     you = robot_ear.recognize_google(audio, language="vi-VN")
+    #     print(f"{WHITE}You: {you}")
+    # except:
+    #     you = ""
+    # if (you == ""):
+    #     continue
     
     # Chat input if u want
-    # you = input("You: ")
+    you = input(f"{WHITE}\nYou: ")
     
     # Send message to Gemini AI
     try:
         response = chat.send_message(you)
-        print(f"Robot: {response.text}")
+        print(f"{GREEN}\nRobot: {response.text}")
         
         # Check if the song in output then play song on youtube
         songs = find_songs_in_string(response.text)
@@ -79,9 +82,9 @@ while (True):
                 linkVideo = videosSearch.result()["result"][0]["link"]
                 webbrowser.open_new_tab(linkVideo)
             except:
-                print("Tiếc quá, tớ kiếm video này trên mạng không ra rồi :(")
+                print(f"{GREEN}\nTiếc quá, tớ kiếm video này trên mạng không ra rồi :(")
     except:
-        print("Robot: Câu nói của bạn không phù hợp tiêu chuẩn đạo đức!!!")
+        print(f"{GREEN}\nRobot: Câu nói của bạn không phù hợp tiêu chuẩn đạo đức!!!")
     
     # Update the history (data.json)
     # Convert Python object to JSON
@@ -91,7 +94,7 @@ while (True):
         json.dump(data, file)
     
     # Play robot sound
-    text = gTTS(text=response.text, lang="vi")
-    text.save("robot_voice.mp3")
-    playsound("robot_voice.mp3")
-    os.remove("robot_voice.mp3")
+    # text = gTTS(text=response.text, lang="vi")
+    # text.save("robot_voice.mp3")
+    # playsound("robot_voice.mp3")
+    # os.remove("robot_voice.mp3")
