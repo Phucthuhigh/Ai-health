@@ -6,6 +6,16 @@ from playsound import playsound
 import os
 from dotenv import load_dotenv
 import json
+import re
+import random
+from youtubesearchpython import VideosSearch
+import webbrowser
+
+# Find all names of the songs in string
+def find_songs_in_string(string):
+    regex = r"\<(.+)\>"
+    songs = re.findall(regex, string)
+    return songs
 
 # Load environment variables
 load_dotenv()
@@ -56,8 +66,22 @@ while (True):
     # you = input("You: ")
     
     # Send message to Gemini AI
-    response = chat.send_message(you)
-    print(f"Robot: {response.text}")
+    try:
+        response = chat.send_message(you)
+        print(f"Robot: {response.text}")
+        
+        # Check if the song in output then play song on youtube
+        songs = find_songs_in_string(response.text)
+        if (len(songs) > 0):
+            song = random.choice(songs)
+            videosSearch = VideosSearch(song, limit = 1)
+            try:
+                linkVideo = videosSearch.result()["result"][0]["link"]
+                webbrowser.open_new_tab(linkVideo)
+            except:
+                print("Tiếc quá, tớ kiếm video này trên mạng không ra rồi :(")
+    except:
+        print("Robot: Câu nói của bạn không phù hợp tiêu chuẩn đạo đức!!!")
     
     # Update the history (data.json)
     # Convert Python object to JSON
