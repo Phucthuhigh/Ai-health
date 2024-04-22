@@ -18,3 +18,4 @@
 > python main.py
 
 - **Lưu ý:** Để reset lại AI, ta chỉ cần xoá file `data.json`.
+- Để chương trình phát được nhạc, cần yêu cầu AI khi đưa tên bài hát phải theo định dạng sau `<Tên bài hát>`
