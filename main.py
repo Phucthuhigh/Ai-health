@@ -86,6 +86,10 @@ while (True):
     except:
         print(f"{GREEN}\nRobot: Câu nói của bạn không phù hợp tiêu chuẩn đạo đức!!!")
     
+    # break if user goodbye or tạm biệt
+    if ("bye" in you or "tạm biệt" in you.lower()):
+        break
+    
     # Update the history (data.json)
     # Convert Python object to JSON
     history = [{"role": el.role, "parts": [text.text for text in el.parts]} for el in chat.history]
