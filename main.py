@@ -28,7 +28,37 @@ robot_ear = speech_recognition.Recognizer()
 
 # Config Gemini AI
 genai.configure(api_key=os.getenv("AI_API_KEY"))
-model = genai.GenerativeModel('gemini-pro')
+
+# Set up the model
+generation_config = {
+    "temperature": 1,
+    "top_p": 0.95,
+    "top_k": 0,
+    "max_output_tokens": 8192,
+}
+
+safety_settings = [
+    {
+        "category": "HARM_CATEGORY_HARASSMENT",
+        "threshold": "BLOCK_NONE"
+    },
+    {
+        "category": "HARM_CATEGORY_HATE_SPEECH",
+        "threshold": "BLOCK_NONE"
+    },
+    {
+        "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+        "threshold": "BLOCK_NONE"
+    },
+    {
+        "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+        "threshold": "BLOCK_NONE"
+    },
+]
+
+model = genai.GenerativeModel(model_name="gemini-1.5-pro-latest",
+                            generation_config=generation_config,
+                            safety_settings=safety_settings)
 
 # Load file history (data.json)
 try:
@@ -50,28 +80,28 @@ except:
 # Process
 while (True):
     # Listen user
-    # with speech_recognition.Microphone() as mic:
-    #     robot_ear.adjust_for_ambient_noise(mic)
-    #     print(f"{GREEN}Robot: Tôi đang nghe")
-    #     audio = robot_ear.listen(mic)
+    with speech_recognition.Microphone() as mic:
+        robot_ear.adjust_for_ambient_noise(mic)
+        print(f"{GREEN}Robot: Tôi đang nghe")
+        audio = robot_ear.listen(mic)
     
-    # print(f"{GREEN}Robot: ...")
+    print(f"{GREEN}Robot: ...")
 
-    # try:
-    #     you = robot_ear.recognize_google(audio, language="vi-VN")
-    #     print(f"{WHITE}You: {you}")
-    # except:
-    #     you = ""
-    # if (you == ""):
-    #     continue
+    try:
+        you = robot_ear.recognize_google(audio, language="vi-VN")
+        print(f"{WHITE}You: {you}")
+    except:
+        you = ""
+    if (you == ""):
+        continue
     
     # Chat input if u want
-    you = input(f"{WHITE}\nYou: ")
+    # you = input(f"{WHITE}\nYou: ")
     
     # Send message to Gemini AI
     try:
         response = chat.send_message(you)
-        print(f"{GREEN}\nRobot: {response.text}")
+        print(f"{GREEN}\nRobot: {response.text.strip()}")
         
         # Check if the song in output then play song on youtube
         songs = find_songs_in_string(response.text)
@@ -98,7 +128,7 @@ while (True):
         json.dump(data, file)
     
     # Play robot sound
-    # text = gTTS(text=response.text, lang="vi")
-    # text.save("robot_voice.mp3")
-    # playsound("robot_voice.mp3")
-    # os.remove("robot_voice.mp3")
+    text = gTTS(text=response.text, lang="vi")
+    text.save("robot_voice.mp3")
+    playsound("robot_voice.mp3")
+    os.remove("robot_voice.mp3")
