@@ -82,14 +82,14 @@ while (True):
     # Listen user
     with speech_recognition.Microphone() as mic:
         robot_ear.adjust_for_ambient_noise(mic)
-        print(f"{GREEN}Robot: Tôi đang nghe")
+        print(f"{GREEN}\nRobot: Tôi đang nghe")
         audio = robot_ear.listen(mic)
     
-    print(f"{GREEN}Robot: ...")
+    print(f"{GREEN}\nRobot: ...")
 
     try:
         you = robot_ear.recognize_google(audio, language="vi-VN")
-        print(f"{WHITE}You: {you}")
+        print(f"{WHITE}\nYou: {you}")
     except:
         you = ""
     if (you == ""):
