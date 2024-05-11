@@ -122,10 +122,10 @@ while (True):
     
     # Update the history (data.json)
     # Convert Python object to JSON
-    history = [{"role": el.role, "parts": [text.text for text in el.parts]} for el in chat.history]
-    data["data"] = history
-    with open("data.json", "w") as file:
-        json.dump(data, file)
+    # history = [{"role": el.role, "parts": [text.text for text in el.parts]} for el in chat.history]
+    # data["data"] = history
+    # with open("data.json", "w") as file:
+    #     json.dump(data, file)
     
     # Play robot sound
     text = gTTS(text=response.text, lang="vi")
